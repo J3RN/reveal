@@ -2,8 +2,6 @@ import React from 'react';
 import Parser from 'web-tree-sitter';
 import './App.css';
 
-const treeSitterWasm = require('web-tree-sitter/tree-sitter.wasm');
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -14,14 +12,22 @@ class App extends React.Component {
       cursorShown: false,
       parser: undefined
     };
+  }
 
-    Parser.init().then(() => this.initializeParser());
+  componentDidMount() {
+    Parser.init({
+      locateFile(scriptName, scriptDirectory) {
+        return scriptName;
+      }
+    }).then(() => this.initializeParser());
   }
 
   async initializeParser() {
     let parser = new Parser();
     const Elixir = await Parser.Language.load('tree-sitter-elixir.wasm');
     parser.setLanguage(Elixir);
+    const tree = parser.parse(this.state.code);
+    console.log(tree.rootNode.toString());
     this.setState({ parser: parser });
   }
 
