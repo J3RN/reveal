@@ -2,6 +2,24 @@ import React from 'react';
 import Parser from 'web-tree-sitter';
 import './App.css';
 
+const colorMapping = {
+  call: "#0FF",
+  identifier: "#0F0",
+  alias: "#AAF",
+  arguments: "#FAF",
+    /* do: "RGBA(0,0,0,0)", */
+    /* ',': "RGBA(0,0,0,0)", */
+    /* '"': "#F0F", */
+  keyword: "#F00",
+  keywords: "#FA0",
+    /* quoted_content: "#F0F", */
+  string: "#F0F",
+  pair: "#222",
+    /* end: "RGBA(0,0,0,0)", */
+  do_block: "#456",
+    /* source: "#123", */
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -10,7 +28,8 @@ class App extends React.Component {
       code: "defmodule Foo.Bar do\n  def hello_world, do: \"Hello, world!\"\nend",
       cursorPos: 0,
       cursorShown: false,
-      parser: undefined
+      parser: undefined,
+      tree: undefined
     };
   }
 
@@ -27,12 +46,13 @@ class App extends React.Component {
     const Elixir = await Parser.Language.load('tree-sitter-elixir.wasm');
     parser.setLanguage(Elixir);
     const tree = parser.parse(this.state.code);
-    console.log(tree.rootNode.toString());
-    this.setState({ parser: parser });
+    Window.tree = tree;
+    Window.renderCode = (text, cursor) => this.renderCode(text, cursor);
+    this.setState({ parser: parser, tree: tree });
   }
 
   updateContent(event) {
-    this.setState({ code: event.target.value, cursorPos: event.target.selectionStart });
+    this.setState({ code: event.target.value, cursorPos: event.target.selectionStart, tree: this.state.parser.parse(this.state.code) });
   }
 
   focusTextarea() {
@@ -47,8 +67,61 @@ class App extends React.Component {
     return (before + "█" + after);
   }
 
+  renderCode(text, cursor) {
+    /* debugger; */
+
+    let childCodes = [];
+    let lastEnd = cursor.startIndex;
+
+    if (cursor.gotoFirstChild()) {
+      let [childStart, childEnd, childRendered] = this.renderCode(text, cursor);
+
+      if (childStart > lastEnd) {
+        childCodes.push(<>{text.slice(lastEnd, childStart)}</>);
+      }
+
+      childCodes.push(childRendered);
+
+      lastEnd = childEnd;
+
+      while (cursor.gotoNextSibling()) {
+        let [childStart, childEnd, childRendered] = this.renderCode(text, cursor);
+
+        if (childStart > lastEnd) {
+          childCodes.push(<span>{text.slice(lastEnd, childStart)}</span>);
+        }
+
+        childCodes.push(childRendered);
+
+        lastEnd = childEnd;
+      }
+
+      cursor.gotoParent();
+    }
+
+    if (lastEnd < cursor.endIndex) {
+      childCodes.push(<>{text.slice(lastEnd, cursor.endIndex)}</>);
+    }
+
+    const key = window.crypto.randomUUID();
+    let color = colorMapping[cursor.nodeType];
+    let colored = true;
+
+    if (color === undefined) {
+      color = "rgba(0,0,0,0)";
+        /* color = "#000"; */
+      colored= false;
+    }
+
+    const style = { background: color };
+    const className = colored ? 'colored' : '';
+    return [cursor.startIndex, cursor.endIndex, <span className={className} style={style} key={key} > {childCodes}</span >];
+  }
+
   render() {
-    let renderedCode = this.state.cursorShown ? this.placeCursor(this.state.code, this.state.cursorPos) : this.state.code;
+    /* let renderedCode = this.state.cursorShown ? this.placeCursor(this.state.code, this.state.cursorPos) : this.state.code; */
+
+    let [_start, _end, renderedCode] = (this.state.tree) ? this.renderCode(this.state.code, this.state.tree.walk()) : [<></>];
 
     return (
       <div className="App" >

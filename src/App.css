@@ -1,27 +1,25 @@
 .App {
-  position: relative;
+  display: grid;
+  grid: auto-flow / 1fr 1fr;
 }
 
 textarea {
-  height: 1px;
-  width: 1px;
-  font-size: 1px;
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  resize: none;
-  z-index: 1;
   font-family: "monospace";
-  opacity: 0;
   white-space: pre;
 }
 
 .editor {
   padding: 5px;
-  position: relative;
   border: 1px solid black;
   white-space: pre;
   font-family: "monospace";
   background-color: #EEE;
-  z-index: 100;
+}
+
+.editor span.colored {
+  padding: 5px;
+  /* display: inline-block; */
+  line-height: calc(1em + 20px);
+  box-sizing: border-box;
+  border-radius: 5px;
 }
