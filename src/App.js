@@ -22,8 +22,6 @@ class App extends React.Component {
 
     this.state = {
       code: "defmodule Foo.Bar do\n  def hello_world, do: \"Hello, world!\"\nend",
-      cursorPos: 0,
-      cursorShown: false,
       parser: undefined,
       tree: undefined
     };
@@ -46,12 +44,11 @@ class App extends React.Component {
   }
 
   updateContent(event) {
-    this.setState({ code: event.target.value, cursorPos: event.target.selectionStart, tree: this.state.parser.parse(this.state.code) });
+    this.setState({ code: event.target.value, tree: this.state.parser.parse(this.state.code) });
   }
 
   focusTextarea() {
     document.querySelector("textarea").focus();
-    this.setState({ cursorShown: true });
   }
 
   placeCursor(code, cursorPos) {
@@ -111,15 +108,11 @@ class App extends React.Component {
   }
 
   render() {
-    /* let renderedCode = this.state.cursorShown ? this.placeCursor(this.state.code, this.state.cursorPos) : this.state.code; */
-
     let [_start, _end, renderedCode] = (this.state.tree) ? this.renderCode(this.state.code, this.state.tree.walk()) : [<></>];
 
     return (
       <div className="App" >
         <textarea
-          onBlur={() => this.setState({ cursorShown: false })}
-          onFocus={() => this.setState({ cursorShown: true })}
           onKeyUp={(e) => this.updateContent(e)}
           onKeyDown={(e) => this.updateContent(e)}
           //onChange={(e) => this.updateContent(e)}
