@@ -2,7 +2,23 @@
 
 A tool to show the underlying AST stucture of your code through colored boxes.  It's like syntax highlighting, but clearer.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Concept
+
+This was the mockup that I created when I first had the idea:
+
+![Code shown with colored boxes around sections of code that represent AST nodes](images/concept.png)
+
+Note that this example is in the Gleam programming language whereas the app currently only supports Elixir.
+
+## Examples
+
+**Shows precedence**
+
+![An example of Reveal showing the precedence of binary operators](images/arithmetic.png)
+
+**Node names available on hover**
+
+![An example of Reveal showing the label "arguments" on a box around a module's name in a defmodule expression](images/module.png)
 
 ## Available Scripts
 
