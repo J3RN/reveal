@@ -3,21 +3,17 @@ import Parser from 'web-tree-sitter';
 import './App.css';
 
 const colorMapping = {
-  call: "#0FF",
-  identifier: "#0F0",
-  alias: "#AAF",
-  arguments: "#FAF",
-    /* do: "RGBA(0,0,0,0)", */
-    /* ',': "RGBA(0,0,0,0)", */
-    /* '"': "#F0F", */
-  keyword: "#F00",
-  keywords: "#FA0",
-    /* quoted_content: "#F0F", */
-  string: "#F0F",
-  pair: "#222",
-    /* end: "RGBA(0,0,0,0)", */
-  do_block: "#456",
-    /* source: "#123", */
+  call:            [180, 100,   50],
+  identifier:      [120, 100,   50],
+  alias:           [240, 100, 83.3],
+  arguments:       [300, 100, 83.3],
+  keyword:         [  0, 100,   50],
+  keywords:        [ 40, 100,   50],
+  string:          [300, 100,   50],
+  pair:            [  0,   0, 13.3],
+  do_block:        [210,  20,  50],
+  binary_operator: [180, 100, 83.3],
+  unary_operator:  [180, 100, 83.3],
 };
 
 class App extends React.Component {
@@ -46,8 +42,6 @@ class App extends React.Component {
     const Elixir = await Parser.Language.load('tree-sitter-elixir.wasm');
     parser.setLanguage(Elixir);
     const tree = parser.parse(this.state.code);
-    Window.tree = tree;
-    Window.renderCode = (text, cursor) => this.renderCode(text, cursor);
     this.setState({ parser: parser, tree: tree });
   }
 
@@ -68,33 +62,21 @@ class App extends React.Component {
   }
 
   renderCode(text, cursor) {
-    /* debugger; */
-
     let childCodes = [];
     let lastEnd = cursor.startIndex;
 
     if (cursor.gotoFirstChild()) {
-      let [childStart, childEnd, childRendered] = this.renderCode(text, cursor);
-
-      if (childStart > lastEnd) {
-        childCodes.push(<>{text.slice(lastEnd, childStart)}</>);
-      }
-
-      childCodes.push(childRendered);
-
-      lastEnd = childEnd;
-
-      while (cursor.gotoNextSibling()) {
+      do {
         let [childStart, childEnd, childRendered] = this.renderCode(text, cursor);
 
         if (childStart > lastEnd) {
-          childCodes.push(<span>{text.slice(lastEnd, childStart)}</span>);
+          childCodes.push(<>{text.slice(lastEnd, childStart)}</>);
         }
 
         childCodes.push(childRendered);
 
         lastEnd = childEnd;
-      }
+      } while (cursor.gotoNextSibling());
 
       cursor.gotoParent();
     }
@@ -104,18 +86,28 @@ class App extends React.Component {
     }
 
     const key = window.crypto.randomUUID();
+    const [colored, style] = this.determineStyle(cursor);
+    const className = colored ? 'colored' : '';
+    return [cursor.startIndex, cursor.endIndex, <div title={cursor.nodeType} className={className} style={style} key={key}>{childCodes}</div>];
+  }
+
+  determineStyle(cursor) {
     let color = colorMapping[cursor.nodeType];
+    let border;
     let colored = true;
 
     if (color === undefined) {
       color = "rgba(0,0,0,0)";
-        /* color = "#000"; */
-      colored= false;
+      border = "rgba(0,0,0,0)";
+      colored = false;
+    } else {
+      const [h, s, l] = color;
+      const borderLightness = l - 10 < 0 ? 0 : l - 10;
+      color = `hsl(${h}deg, ${s}%, ${l}%)`;
+      border = `hsl(${h}deg, ${s}%, ${borderLightness}%)`;
     }
 
-    const style = { background: color };
-    const className = colored ? 'colored' : '';
-    return [cursor.startIndex, cursor.endIndex, <span className={className} style={style} key={key} > {childCodes}</span >];
+    return [colored, { backgroundColor: color, borderColor: border }];
   }
 
   render() {

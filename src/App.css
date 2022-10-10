@@ -16,10 +16,15 @@ textarea {
   background-color: #EEE;
 }
 
-.editor span.colored {
+.editor div {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.editor div.colored {
   padding: 5px;
-  /* display: inline-block; */
-  line-height: calc(1em + 20px);
+  width: fit-content;
   box-sizing: border-box;
   border-radius: 5px;
+  border: solid 5px;
 }
