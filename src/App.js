@@ -85,7 +85,13 @@ class App extends React.Component {
     const key = window.crypto.randomUUID();
     const [colored, style] = this.determineStyle(cursor);
     const className = colored ? 'colored' : '';
-    return [cursor.startIndex, cursor.endIndex, <div title={cursor.nodeType} className={className} style={style} key={key}>{childCodes}</div>];
+
+    let attrs = { key, style, className }
+    if (colored) {
+      attrs.title = cursor.nodeType
+    }
+
+    return [cursor.startIndex, cursor.endIndex, <div {...attrs}>{childCodes}</div>];
   }
 
   determineStyle(cursor) {
