@@ -3,17 +3,20 @@ import Parser from 'web-tree-sitter';
 import './App.css';
 
 const colorMapping = {
-  call:            [180, 100,   50],
-  identifier:      [120, 100,   50],
-  alias:           [240, 100, 83.3],
-  arguments:       [300, 100, 83.3],
-  keyword:         [  0, 100,   50],
-  keywords:        [ 40, 100,   50],
-  string:          [300, 100,   50],
-  pair:            [  0,   0, 13.3],
-  do_block:        [210,  20,  50],
-  binary_operator: [180, 100, 83.3],
-  unary_operator:  [180, 100, 83.3],
+    call: [56, 19, 98],
+    identifier: [27, 18, 99],
+    alias: [356, 19, 100],
+    arguments: [311, 20, 95],
+    keyword: [263, 23, 94],
+    keywords: [215, 33, 95],
+    string: [195, 41, 96],
+    pair: [185, 42, 96],
+    do_block: [167, 38, 96],
+    binary_operator: [126, 26, 98],
+    unary_operator: [126, 26, 98],
+    tuple: [126, 26, 98],
+    list: [126, 26, 98],
+    comment: [185, 42, 96],
 };
 
 class App extends React.Component {
