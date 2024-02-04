@@ -8,7 +8,7 @@ This was the mockup that I created when I first had the idea:
 
 ![Code shown with colored boxes around sections of code that represent AST nodes](images/concept.png)
 
-Note that this example is in the Gleam programming language whereas the app currently only supports Elixir.
+Note that this example is in the Gleam programming language whereas the app currently only supports Elixir and JavaScript (more soon!).
 
 ## Examples
 

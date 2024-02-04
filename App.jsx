@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import Parser from 'web-tree-sitter';
 
-/* Language modules */
-import * as elixir from './elixir';
-
 import './App.css';
 
+/* Language modules */
+import * as elixir from './elixir';
+import * as javascript from './javascript';
+
 export default function App() {
+  const mapping = {
+    Elixir: elixir,
+    JavaScript: javascript,
+  };
+
   const [code, setCode] = useState(undefined);
-  const [languageMod, setLanguageMod] = useState(elixir);
+  const [language, setLanguage] = useState('JavaScript');
+  const [languageMod, setLanguageMod] = useState(undefined);
   const [parser, setParser] = useState(undefined);
   const [tree, setTree] = useState(undefined);
 
@@ -28,25 +35,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (parser && code) setTree(parser.parse(code));
+  }, [code]);
+
+  useEffect(() => {
     const loadLanguage = async () => {
-      const language = await Parser.Language.load(languageMod.treeSitterWasm);
+      const languageWasm = await Parser.Language.load(languageMod.treeSitterWasm);
       const code = languageMod.defaultProgram;
 
-      const parser = new Parser();
-      parser.setLanguage(language);
-      const tree = parser.parse(code);
+      parser.setLanguage(languageWasm);
 
       setParser(parser);
       setCode(code);
-      setTree(tree);
-      setLanguageMod(languageMod);
     };
-    loadLanguage();
-  }, [languageMod]);
+    if (languageMod && parser) loadLanguage();
+  }, [languageMod, parser]);
+
+  useEffect(() => {
+    setLanguageMod(mapping[language]);
+  }, [language]);
 
   const updateContent = (event) => {
     setCode(event.target.value);
-    setTree(parser.parse(event.target.value));
   };
 
   /* Meant for when the color view is directly editable; not currently used. */
@@ -109,17 +119,33 @@ export default function App() {
       attrs.title = cursor.nodeType;
     }
 
-    return [cursor.startIndex, cursor.endIndex, <div {...attrs}>{childCodes}</div>];
+    return [
+      cursor.startIndex,
+      cursor.endIndex,
+      <div data-node-type={cursor.nodeType} {...attrs}>
+        {childCodes}
+      </div>,
+    ];
   };
 
   let [_start, _end, renderedCode] = tree ? renderCode(code, tree.walk()) : [<></>];
 
+  const selectSetLanguage = (e) => {
+    setLanguage(e.target.value);
+  };
+
   return (
-    <div className="App">
-      <textarea onKeyUp={(e) => updateContent(e)} defaultValue={code}></textarea>
-      <div className="editor" onClick={() => this.focusTextarea()}>
-        {renderedCode}
+    <>
+      <select onChange={selectSetLanguage} value={language}>
+        <option value="Elixir">Elixir</option>
+        <option value="JavaScript">JavaScript</option>
+      </select>
+      <div className="App">
+        <textarea onKeyUp={updateContent} defaultValue={code}></textarea>
+        <div className="editor" onClick={focusTextarea}>
+          {renderedCode}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
