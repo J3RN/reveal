@@ -4,7 +4,7 @@
 }
 
 textarea {
-  font-family: "monospace";
+  font-family: 'monospace';
   white-space: pre;
 }
 
@@ -12,8 +12,8 @@ textarea {
   padding: 5px;
   border: 1px solid black;
   white-space: pre;
-  font-family: "monospace";
-  background-color: #EEE;
+  font-family: 'monospace';
+  background-color: #eee;
 }
 
 .editor div {
