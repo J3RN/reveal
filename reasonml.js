@@ -8,6 +8,8 @@ export const colorMapping = {
   switch_expression:   [108, 50, 90],
   function:            [270, 50, 90],
   call_expression:     [ 56, 50, 90],
+  binary_expression:   [126, 50, 90],
+  number:              [180, 50, 90],
 };
 
 export const defaultProgram = 'type schoolPerson = Teacher | Director | Student(string);\n\n\
