@@ -6,11 +6,13 @@ import './App.css';
 /* Language modules */
 import * as elixir from './elixir';
 import * as javascript from './javascript';
+import * as reasonml from './reasonml';
 
 export default function App() {
   const mapping = {
-    Elixir: elixir,
     JavaScript: javascript,
+    Elixir: elixir,
+    ReasonML: reasonml
   };
 
   const [code, setCode] = useState(undefined);
@@ -137,8 +139,7 @@ export default function App() {
   return (
     <>
       <select onChange={selectSetLanguage} value={language}>
-        <option value="Elixir">Elixir</option>
-        <option value="JavaScript">JavaScript</option>
+        {Object.keys(mapping).map((key) => <option key={key} value={key}>{key}</option>)}
       </select>
       <div className="App">
         <textarea onKeyUp={updateContent} defaultValue={code}></textarea>
