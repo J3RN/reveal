@@ -7,11 +7,13 @@ import './App.css';
 import * as elixir from './elixir';
 import * as javascript from './javascript';
 import * as reasonml from './reasonml';
+import * as python from './python';
 
 export default function App() {
   const mapping = {
     JavaScript: javascript,
     Elixir: elixir,
+    Python: python,
     ReasonML: reasonml
   };
 
