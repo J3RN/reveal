@@ -142,7 +142,7 @@ export default function App() {
         {Object.keys(mapping).map((key) => <option key={key} value={key}>{key}</option>)}
       </select>
       <div className="App">
-        <textarea onKeyUp={updateContent} defaultValue={code}></textarea>
+        <textarea onChange={updateContent} value={code}></textarea>
         <div className="editor" onClick={focusTextarea}>
           {renderedCode}
         </div>
