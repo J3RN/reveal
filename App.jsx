@@ -14,7 +14,7 @@ export default function App() {
     JavaScript: javascript,
     Elixir: elixir,
     Python: python,
-    ReasonML: reasonml
+    ReasonML: reasonml,
   };
 
   const [code, setCode] = useState(undefined);

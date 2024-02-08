@@ -20,12 +20,13 @@ export const colorMapping = {
   comment:             [185, 50, 90],
 };
 
-export const defaultProgram = 'def fib(n):\n\
+export const defaultProgram =
+  "def fib(n):\n\
     a, b = 0, 1\n\
     while a < n :\n\
-        print(a, end=\' \')\n\
+        print(a, end=' ')\n\
         a, b = b, a + b\n\
     print()\n\
-print(1000)';
+print(1000)";
 
 export const treeSitterWasm = 'tree-sitter-python.wasm';

@@ -12,7 +12,8 @@ export const colorMapping = {
   number:              [180, 50, 90],
 };
 
-export const defaultProgram = 'type schoolPerson = Teacher | Director | Student(string);\n\n\
+export const defaultProgram =
+  'type schoolPerson = Teacher | Director | Student(string);\n\n\
 let greeting = person =>\n\
   switch (person) {\n\
   | Teacher => "Hey Professor!"\n\
