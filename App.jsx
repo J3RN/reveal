@@ -139,16 +139,22 @@ export default function App() {
   };
 
   return (
-    <>
-      <select onChange={selectSetLanguage} value={language}>
-        {Object.keys(mapping).map((key) => <option key={key} value={key}>{key}</option>)}
-      </select>
-      <div className="App">
-        <textarea onChange={updateContent} value={code}></textarea>
+    <div className="App">
+      <div className="tool-bar">
+        <select onChange={selectSetLanguage} value={language}>
+          {Object.keys(mapping).map((key) => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="editor-box">
+        <textarea className="raw-editor" onChange={updateContent} value={code}></textarea>
         <div className="editor" onClick={focusTextarea}>
           {renderedCode}
         </div>
       </div>
-    </>
+    </div>
   );
 }

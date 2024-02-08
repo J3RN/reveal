@@ -1,19 +1,32 @@
 .App {
-  display: grid;
-  grid: auto-flow / 1fr 1fr;
+  border: 1px solid black;
 }
 
-textarea {
+.tool-bar {
+  background: #ddd;
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+  border-bottom: 1px solid black;
+}
+
+.editor-box {
+  display: grid;
+  grid: auto-flow / 50% 50%;
+}
+
+textarea.raw-editor {
   font-family: 'monospace';
   white-space: pre;
+  border: none;
 }
 
 .editor {
   padding: 5px;
-  border: 1px solid black;
+  border-left: 1px solid black;
   white-space: pre;
   font-family: 'monospace';
   background-color: #eee;
+  overflow-x: scroll;
 }
 
 .editor div {

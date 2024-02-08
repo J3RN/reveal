@@ -7,8 +7,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1.main-title {
-  text-align: center;
+header {
+  background: #333;
+  margin-bottom: 30px;
+  padding: 15px 0;
+}
+
+nav {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+a.main-title {
+  color: #eee;
+  text-decoration: none;
+  font-size: 2rem;
+}
+
+section {
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 code {
