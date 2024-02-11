@@ -72,22 +72,14 @@ export default function App() {
   };
 
   const determineStyle = (cursor) => {
-    let color = languageMod.colorMapping[cursor.nodeType];
-    let border;
-    let colored = true;
+    let hue = languageMod.colorMapping[cursor.nodeType];
 
-    if (color === undefined) {
-      color = 'rgba(0,0,0,0)';
-      border = 'rgba(0,0,0,0)';
-      colored = false;
-    } else {
-      const [h, s, l] = color;
-      const borderLightness = l - 10 < 0 ? 0 : l - 10;
-      color = `hsl(${h}deg, ${s}%, ${l}%)`;
-      border = `hsl(${h}deg, ${s}%, ${borderLightness}%)`;
+    if (hue !== undefined) {
+      return {
+        backgroundColor: `hsl(${hue}deg, 50%, 90%)`,
+        borderColor: `hsl(${hue}deg, 50%, 80%)`,
+      };
     }
-
-    return [colored, { backgroundColor: color, borderColor: border }];
   };
 
   const renderCode = (text, cursor) => {
@@ -115,11 +107,11 @@ export default function App() {
     }
 
     const key = window.crypto.randomUUID();
-    const [colored, style] = determineStyle(cursor);
-    const className = colored ? 'colored' : '';
+    const style = determineStyle(cursor);
+    const className = style ? 'colored' : '';
 
     let attrs = { key, style, className };
-    if (colored) {
+    if (style) {
       attrs.title = cursor.nodeType;
     }
 

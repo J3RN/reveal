@@ -1,14 +1,22 @@
+import commonColors from './common_colors';
+
 export const colorMapping = {
-  export_statement:     [123, 50, 90],
-  arrow_function:       [270, 50, 90],
-  function_declaration: [270, 50, 90],
-  call_expression:      [ 56, 50, 90],
-  formal_parameters:    [311, 50, 90],
-  arguments:            [311, 50, 90],
-  string:               [195, 50, 90],
-  number:               [180, 50, 90],
-  identifier:           [ 27, 50, 90],
-  lexical_declaration:  [350, 50, 90]
+  ...commonColors,
+  shorthand_property_identifier: commonColors.identifier,
+  property_identifier:  30,
+  call_expression:      commonColors.call,
+  member_expression:    75,
+  import_statement:     120,
+  export_statement:     120,
+  number:               commonColors.primitive,
+  string:               commonColors.collection,
+  array:                commonColors.collection,
+  object:               commonColors.collection,
+  arrow_function:       commonColors.function,
+  function_declaration: commonColors.function,
+  formal_parameters:    commonColors.parameters,
+  arguments:            commonColors.parameters,
+  lexical_declaration:  commonColors.declaration,
 };
 
 export const defaultProgram =
