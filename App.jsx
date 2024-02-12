@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Parser from 'web-tree-sitter';
+import languages from './languages';
 
 import './App.css';
 
-/* Language modules */
-import * as elixir from './elixir';
-import * as javascript from './javascript';
-import * as reasonml from './reasonml';
-import * as python from './python';
-
 export default function App() {
-  const mapping = {
-    JavaScript: javascript,
-    Elixir: elixir,
-    Python: python,
-    ReasonML: reasonml,
-  };
+  const lookupLanguage = (name) => languages.find((lang) => lang.name === name);
 
-  const [code, setCode] = useState(undefined);
-  const [language, setLanguage] = useState('JavaScript');
-  const [languageMod, setLanguageMod] = useState(undefined);
+  const defaultLanguageName = 'JavaScript';
+
+  const [language, setLanguage] = useState(
+    lookupLanguage(window.localStorage.getItem('revealLang') || defaultLanguageName),
+  );
+  const [code, setCode] = useState(
+    window.localStorage.getItem('revealCode') || language.defaultProgram,
+  );
   const [parser, setParser] = useState(undefined);
   const [tree, setTree] = useState(undefined);
 
@@ -39,24 +34,23 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (parser && code) setTree(parser.parse(code));
-  }, [code]);
+    if (language && parser) {
+      Parser.Language.load(language.treeSitterWasm).then((languageWasm) => {
+        parser.setLanguage(languageWasm);
+        setTree(parser.parse(code));
+      });
+    }
+  }, [parser, language]);
 
   useEffect(() => {
-    const loadLanguage = async () => {
-      const languageWasm = await Parser.Language.load(languageMod.treeSitterWasm);
-      const code = languageMod.defaultProgram;
-
-      parser.setLanguage(languageWasm);
-
-      setParser(parser);
-      setCode(code);
-    };
-    if (languageMod && parser) loadLanguage();
-  }, [languageMod, parser]);
+    window.localStorage.setItem('revealCode', code);
+    if (code && parser && parser.getLanguage()) {
+      setTree(parser.parse(code));
+    }
+  }, [parser, code]);
 
   useEffect(() => {
-    setLanguageMod(mapping[language]);
+    window.localStorage.setItem('revealLang', language.name);
   }, [language]);
 
   const updateContent = (event) => {
@@ -72,7 +66,7 @@ export default function App() {
   };
 
   const determineStyle = (cursor) => {
-    let hue = languageMod.colorMapping[cursor.nodeType];
+    let hue = language.colorMapping[cursor.nodeType];
 
     if (hue !== undefined) {
       return {
@@ -124,19 +118,22 @@ export default function App() {
     ];
   };
 
-  let [_start, _end, renderedCode] = tree ? renderCode(code, tree.walk()) : [<></>];
 
-  const selectSetLanguage = (e) => {
-    setLanguage(e.target.value);
+  const handleLanguageChange = (event) => {
+    const languageMod = lookupLanguage(event.target.value);
+    setLanguage(languageMod);
+    setCode(languageMod.defaultProgram);
   };
+
+  let [_start, _end, renderedCode] = tree ? renderCode(code, tree.walk()) : [<></>];
 
   return (
     <div className="App">
       <div className="tool-bar">
-        <select onChange={selectSetLanguage} value={language}>
-          {Object.keys(mapping).map((key) => (
-            <option key={key} value={key}>
-              {key}
+        <select onChange={handleLanguageChange} value={language.name}>
+          {languages.map((lang) => (
+            <option key={lang.name} value={lang.name}>
+              {lang.name}
             </option>
           ))}
         </select>
