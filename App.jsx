@@ -53,10 +53,6 @@ export default function App() {
     window.localStorage.setItem('revealLang', language.name);
   }, [language]);
 
-  const updateContent = (event) => {
-    setCode(event.target.value);
-  };
-
   /* Meant for when the color view is directly editable; not currently used. */
   const placeCursor = (code, cursorPos) => {
     const before = code.slice(0, cursorPos);
@@ -118,11 +114,18 @@ export default function App() {
     ];
   };
 
+  const handleCodeChange = (event) => {
+    setCode(event.target.value);
+  };
 
   const handleLanguageChange = (event) => {
     const languageMod = lookupLanguage(event.target.value);
     setLanguage(languageMod);
     setCode(languageMod.defaultProgram);
+  };
+
+  const reset = () => {
+    setCode(language.defaultProgram);
   };
 
   let [_start, _end, renderedCode] = tree ? renderCode(code, tree.walk()) : [<></>];
@@ -137,9 +140,12 @@ export default function App() {
             </option>
           ))}
         </select>
+        <button className="reset" onClick={reset}>
+          Reset
+        </button>
       </div>
       <div className="editor-box">
-        <textarea className="raw-editor" onChange={updateContent} value={code}></textarea>
+        <textarea className="raw-editor" onChange={handleCodeChange} value={code}></textarea>
         <div className="editor" onClick={focusTextarea}>
           {renderedCode}
         </div>
