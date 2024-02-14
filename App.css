@@ -41,3 +41,14 @@ textarea.raw-editor {
   border-radius: 5px;
   border: solid 5px;
 }
+
+@media (max-width: 1000px) {
+  .editor-box {
+    grid: auto-flow / 100%;
+  }
+
+  .editor {
+    border-left: none;
+    border-top: 1px solid black;
+  }
+}
