@@ -13,20 +13,16 @@ header {
   padding: 15px 0;
 }
 
-nav {
+nav, section {
   max-width: 1500px;
   margin: 0 auto;
+  padding: 0 15px;
 }
 
 a.main-title {
   color: #eee;
   text-decoration: none;
   font-size: 2rem;
-}
-
-section {
-  max-width: 1500px;
-  margin: 0 auto;
 }
 
 code {
