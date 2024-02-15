@@ -2,8 +2,10 @@
 import React from 'react';
 
 export default function Node({ node, language }) {
-  const determineStyle = (nodeType) => {
-    let hue = language.colorMapping[nodeType];
+  const determineStyle = (node) => {
+    if (!node.named) return;
+
+    let hue = language.colorMapping[node.nodeType];
 
     if (hue !== undefined) {
       return {
@@ -21,7 +23,7 @@ export default function Node({ node, language }) {
   const childNodes = children.map((child) => <Node node={child} language={language} />);
 
   const key = window.crypto.randomUUID();
-  const style = determineStyle(nodeType);
+  const style = determineStyle(node);
   const className = style ? 'colored' : '';
 
   let attrs = {
