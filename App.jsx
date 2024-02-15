@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Parser from 'web-tree-sitter';
+import Node from './Node';
 import languages from './languages';
 
 import './App.css';
@@ -53,67 +54,6 @@ export default function App() {
     window.localStorage.setItem('revealLang', language.name);
   }, [language]);
 
-  /* Meant for when the color view is directly editable; not currently used. */
-  const placeCursor = (code, cursorPos) => {
-    const before = code.slice(0, cursorPos);
-    const beginAfter = code.slice(cursorPos, cursorPos + 1) === '\n' ? cursorPos : cursorPos + 1;
-    const after = code.slice(beginAfter);
-    return before + '█' + after;
-  };
-
-  const determineStyle = (cursor) => {
-    let hue = language.colorMapping[cursor.nodeType];
-
-    if (hue !== undefined) {
-      return {
-        backgroundColor: `hsl(${hue}deg, 50%, 90%)`,
-        borderColor: `hsl(${hue}deg, 50%, 80%)`,
-      };
-    }
-  };
-
-  const renderCode = (text, cursor) => {
-    let childCodes = [];
-    let lastEnd = cursor.startIndex;
-
-    if (cursor.gotoFirstChild()) {
-      do {
-        let [childStart, childEnd, childRendered] = renderCode(text, cursor);
-
-        if (childStart > lastEnd) {
-          childCodes.push(<>{text.slice(lastEnd, childStart)}</>);
-        }
-
-        childCodes.push(childRendered);
-
-        lastEnd = childEnd;
-      } while (cursor.gotoNextSibling());
-
-      cursor.gotoParent();
-    }
-
-    if (lastEnd < cursor.endIndex) {
-      childCodes.push(<>{text.slice(lastEnd, cursor.endIndex)}</>);
-    }
-
-    const key = window.crypto.randomUUID();
-    const style = determineStyle(cursor);
-    const className = style ? 'colored' : '';
-
-    let attrs = { key, style, className };
-    if (style) {
-      attrs.title = cursor.nodeType;
-    }
-
-    return [
-      cursor.startIndex,
-      cursor.endIndex,
-      <div data-node-type={cursor.nodeType} {...attrs}>
-        {childCodes}
-      </div>,
-    ];
-  };
-
   const handleCodeChange = (event) => {
     setCode(event.target.value);
   };
@@ -128,7 +68,36 @@ export default function App() {
     setCode(language.defaultProgram);
   };
 
-  let [_start, _end, renderedCode] = tree ? renderCode(code, tree.walk()) : [<></>];
+  /* Converts the textual code + tree-sitter cursor to a tree of objects */
+  const toNode = (text, cursor) => {
+    let children = [];
+    let lastEnd = cursor.startIndex;
+
+    if (cursor.gotoFirstChild()) {
+      do {
+        let [childStart, childEnd, child] = toNode(text, cursor);
+
+        if (childStart > lastEnd) {
+          children.push(text.slice(lastEnd, childStart));
+        }
+
+        children.push(child);
+
+        lastEnd = childEnd;
+      } while (cursor.gotoNextSibling());
+
+      cursor.gotoParent();
+    }
+
+    if (lastEnd < cursor.endIndex) {
+      children.push(text.slice(lastEnd, cursor.endIndex));
+    }
+
+    return [cursor.startIndex, cursor.endIndex, { nodeType: cursor.nodeType, children }];
+  };
+
+  let [_start, _end, rootNode] = tree ? toNode(code, tree.walk()) : [0, 0, ''];
+  let root = language ? <Node node={rootNode} language={language} /> : <></>;
 
   return (
     <div className="App">
@@ -147,7 +116,7 @@ export default function App() {
       <div className="editor-box">
         <textarea className="raw-editor" onChange={handleCodeChange} value={code}></textarea>
         <div className="editor" onClick={focusTextarea}>
-          {renderedCode}
+          {root}
         </div>
       </div>
     </div>
