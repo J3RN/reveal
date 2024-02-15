@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Parser from 'web-tree-sitter';
+
+import ToolBar from './ToolBar';
 import Node from './Node';
 import languages from './languages';
 
@@ -101,18 +103,12 @@ export default function App() {
 
   return (
     <div className="App">
-      <div className="tool-bar">
-        <select onChange={handleLanguageChange} value={language.name}>
-          {languages.map((lang) => (
-            <option key={lang.name} value={lang.name}>
-              {lang.name}
-            </option>
-          ))}
-        </select>
-        <button className="reset" onClick={handleReset}>
-          Reset
-        </button>
-      </div>
+      <ToolBar
+        language={language}
+        languages={languages}
+        handleLanguageChange={handleLanguageChange}
+        handleReset={handleReset}
+      />
       <div className="editor-box">
         <textarea className="raw-editor" onChange={handleCodeChange} value={code}></textarea>
         <div className="editor" onClick={focusTextarea}>
