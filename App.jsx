@@ -64,7 +64,7 @@ export default function App() {
     setCode(languageMod.defaultProgram);
   };
 
-  const reset = () => {
+  const handleReset = () => {
     setCode(language.defaultProgram);
   };
 
@@ -109,7 +109,7 @@ export default function App() {
             </option>
           ))}
         </select>
-        <button className="reset" onClick={reset}>
+        <button className="reset" onClick={handleReset}>
           Reset
         </button>
       </div>
