@@ -67,6 +67,25 @@ fib(1000)",
     treeSitterWasm: 'tree-sitter-python.wasm',
   },
   {
+    name: 'Go',
+    colorMapping: {
+      ...commonColors,
+      field_identifier:     commonColors.property,
+      import_declaration:   commonColors.import,
+      interpreted_string_literal: commonColors.collection,
+      function_declaration: commonColors.function,
+      parameter_list:       commonColors.parameters,
+    },
+    defaultProgram: 'package main\n\
+\n\
+import "fmt"\n\
+\n\
+func main() {\n\
+    fmt.Println("Hello, World!")\n\
+}',
+    treeSitterWasm: 'tree-sitter-go.wasm',
+  },
+  {
     name: 'Elixir',
     colorMapping: {
       ...commonColors,
