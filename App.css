@@ -18,6 +18,7 @@ textarea.raw-editor {
   font-family: 'monospace';
   white-space: pre;
   border: none;
+  resize: vertical;
 }
 
 .editor {
