@@ -70,13 +70,18 @@ fib(1000)",
     name: 'Go',
     colorMapping: {
       ...commonColors,
-      field_identifier:     commonColors.property,
-      import_declaration:   commonColors.import,
+      field_identifier:           commonColors.property,
+      call_expression:            commonColors.call,
+      selector_expression:        commonColors.call,
+      import_declaration:         commonColors.import,
+      type_identifier:            120,
       interpreted_string_literal: commonColors.collection,
-      function_declaration: commonColors.function,
-      parameter_list:       commonColors.parameters,
+      function_declaration:       commonColors.function,
+      argument_list:              commonColors.parameters,
+      parameter_list:             commonColors.parameters,
     },
-    defaultProgram: 'package main\n\
+    defaultProgram:
+      'package main\n\
 \n\
 import "fmt"\n\
 \n\
