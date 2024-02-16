@@ -19,25 +19,25 @@ export default function Node({ node, language }) {
     return <>{node}</>;
   }
 
-  const { nodeType, children } = node;
+  const { label: label, named, nodeType, children } = node;
   const childNodes = children.map((child) => <Node node={child} language={language} />);
 
   const key = window.crypto.randomUUID();
   const style = determineStyle(node);
-  const className = style ? 'colored' : '';
 
   let attrs = {
     key,
     style,
-    className,
   };
+
   if (style) {
-    attrs.title = nodeType;
+    attrs['title'] = label ? label + ": " + nodeType : nodeType;
+    attrs['className'] = 'colored';
   }
 
-  return (
-    <div data-node-type={nodeType} {...attrs}>
-      {childNodes}
-    </div>
-  );
+  if (named) {
+    attrs['data-node-type'] = nodeType;
+  }
+
+  return <div {...attrs}>{childNodes}</div>;
 }

@@ -95,7 +95,11 @@ export default function App() {
       children.push(text.slice(lastEnd, cursor.endIndex));
     }
 
-    return [cursor.startIndex, cursor.endIndex, { named: cursor.nodeIsNamed, nodeType: cursor.nodeType, children }];
+    return [
+      cursor.startIndex,
+      cursor.endIndex,
+      { label: cursor.currentFieldName(), named: cursor.nodeIsNamed, nodeType: cursor.nodeType, children },
+    ];
   };
 
   let [_start, _end, rootNode] = tree ? toNode(code, tree.walk()) : [0, 0, ''];
