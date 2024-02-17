@@ -19,7 +19,7 @@ export default function Node({ node, language }) {
     return <>{node}</>;
   }
 
-  const { label: label, named, nodeType, children } = node;
+  const { label, named, nodeType, children } = node;
   const childNodes = children.map((child) => <Node node={child} language={language} />);
 
   const key = window.crypto.randomUUID();
