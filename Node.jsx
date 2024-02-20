@@ -31,7 +31,7 @@ export default function Node({ node, language }) {
   };
 
   if (style) {
-    attrs['title'] = label ? label + ": " + nodeType : nodeType;
+    attrs['title'] = label ? label + ': ' + nodeType : nodeType;
     attrs['className'] = 'colored';
   }
 

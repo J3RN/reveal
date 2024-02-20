@@ -98,7 +98,12 @@ export default function App() {
     return [
       cursor.startIndex,
       cursor.endIndex,
-      { label: cursor.currentFieldName(), named: cursor.nodeIsNamed, nodeType: cursor.nodeType, children },
+      {
+        label: cursor.currentFieldName(),
+        named: cursor.nodeIsNamed,
+        nodeType: cursor.nodeType,
+        children,
+      },
     ];
   };
 
