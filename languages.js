@@ -162,6 +162,7 @@ let greeting = person =>\n\
       type_identifier:     120,
       constructor_name:    135,
       case:                commonColors.control,
+      case_clause:         commonColors.block,
       data_constructor:    150,
       keyword:             150,
       integer:             commonColors.primitive,
