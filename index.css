@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --monospace: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 header {
@@ -27,6 +29,5 @@ a.main-title {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: var(--monospace);
 }
