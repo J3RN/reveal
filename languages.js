@@ -22,6 +22,7 @@ export default [
       export_statement:     120,
       do_statement:         commonColors.control,
       if_statement:         commonColors.control,
+      ternary_expression:   commonColors.control,
       switch_statement:     commonColors.control,
       while_statement:      commonColors.control,
       true:                 commonColors.primitive,
