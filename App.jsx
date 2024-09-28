@@ -4,6 +4,7 @@ import Parser from 'web-tree-sitter';
 import ToolBar from './ToolBar';
 import Node from './Node';
 import languages from './languages';
+import { renderNode } from './svg_renderer';
 
 import './App.css';
 
@@ -108,7 +109,8 @@ export default function App() {
   };
 
   let [_start, _end, rootNode] = tree ? toNode(code, tree.walk()) : [0, 0, ''];
-  let root = language ? <Node node={rootNode} language={language} /> : <></>;
+  /* let root = language ? <Node node={rootNode} language={language} /> : <></>; */
+  const { lastX, lastY, obj: rn } = renderNode(0, 0, rootNode);
 
   return (
     <div className="App">
@@ -121,7 +123,9 @@ export default function App() {
       <div className="editor-box">
         <textarea className="raw-editor" onChange={handleCodeChange} value={code}></textarea>
         <div className="editor" onClick={focusTextarea}>
-          {root}
+          <svg height="1000px" width="1000px">
+            {rn}
+          </svg>
         </div>
       </div>
     </div>
