@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Parser from 'web-tree-sitter';
+import { Parser, Language } from 'web-tree-sitter';
 
 import ToolBar from './ToolBar';
 import Node from './Node';
@@ -38,7 +38,7 @@ export default function App() {
 
   useEffect(() => {
     if (language && parser) {
-      Parser.Language.load(language.treeSitterWasm).then((languageWasm) => {
+      Language.load(language.treeSitterWasm).then((languageWasm) => {
         parser.setLanguage(languageWasm);
         setTree(parser.parse(code));
       });
@@ -47,7 +47,7 @@ export default function App() {
 
   useEffect(() => {
     window.localStorage.setItem('revealCode', code);
-    if (code && parser && parser.getLanguage()) {
+    if (code && parser && parser.language) {
       setTree(parser.parse(code));
     }
   }, [parser, code]);
@@ -99,7 +99,7 @@ export default function App() {
       cursor.startIndex,
       cursor.endIndex,
       {
-        label: cursor.currentFieldName(),
+        label: cursor.currentFieldName,
         named: cursor.nodeIsNamed,
         nodeType: cursor.nodeType,
         children,
